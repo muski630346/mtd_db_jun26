@@ -1,39 +1,48 @@
-import pymysql#driver  for connecting python with mysql
 import db_connect_2 as dbc
 
 def create_db():
-    query='create database  if not exists muskan_db'
-    try:
-        connection=dbc.db_connect()
-        cursor=connection.cursor()
-        result=cursor.execute(query)
-        connection.commit()
-        cursor.close()
-        #connection.close()
-        dbc.db_disconnect(connection)
-        if result==1:
-            print("DB created")
-        else:    
-            print("DB already exists")
-    except Exception as e:
-        print("error in creating db:e",e)
-    
+    query = "CREATE DATABASE IF NOT EXISTS muskan_db"
+
+    connection = dbc.db_connect()
+    if connection is None:
+        print("DB connection failed")
+        return
+
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    connection.commit()
+    cursor.close()
+    dbc.db_disconnect(connection)
+
+    print("Database created successfully")
+
+
 def create_table():
-    query='create table if not exists employee(id int primary key auto_increment,name varchar(20) not null,salary float,designation varchar(20),phone_number bigint unique)'
-    try:
-        connection=dbc.db_connect()
-        cursor=connection.cursor()
-        result=cursor.execute(query)
-        connection.commit()
-        cursor.close()
-        #connection.close()
-        dbc.db_disconnect(connection)
-        if result==1:
-            print("table created")
-        else:    
-            print("table already exists")
-    except Exception as e:
-        print("error in creating table:e",e)
+    query = """
+    CREATE TABLE IF NOT EXISTS employee(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        name VARCHAR(20) NOT NULL,
+        salary FLOAT,
+        designation VARCHAR(20),
+        phone_number BIGINT UNIQUE
+    )
+    """
+
+    connection = dbc.db_connect()
+    if connection is None:
+        print("DB connection failed")
+        return
+
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    connection.commit()
+    cursor.close()
+    dbc.db_disconnect(connection)
+
+    print("Table created successfully")
+
+
 create_db()
 create_table()
-
